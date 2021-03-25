@@ -66,13 +66,38 @@ HAVING count(*)>= 10
 ORDER BY "length";
 
 -- Извлечь все телефоны конкретного заказа
-SELECT  phones.id
-FROM  phones
-JOIN phones_to_orders ON phones_to_orders."orderId" = phones.id
-JOIN orders ON  orders.id = phones_to_orders."orderId" 
-WHERE orders.id = 2
-ORDER BY orders.id;
+SELECT  *
+FROM  phones AS p
+JOIN phones_to_orders AS pto ON p.id = pto."phoneId"
+WHERE pto."orderId" = 2
+ORDER BY p.id;
 
 -- Кол-во заказов каждого пользователя и его имеил
-SELECT *
-FROM users
+SELECT u.id,u.email, count(o.id)
+FROM users AS u
+JOIN orders AS o ON u.id = o."userId"
+GROUP BY u.id
+ORDER BY u.id;
+
+-- Кол-во позиций товара в определенном заказе
+SELECT phones_to_orders."orderId", count(phones_to_orders."phoneId")
+FROM phones_to_orders 
+WHERE phones_to_orders."orderId" = 2
+GROUP BY phones_to_orders."orderId";
+
+-- Извлечь самый популярный телефон 
+SELECT sum(pto.quantity) AS "Amount", p.id, p.model, p.brand
+FROM phones AS p
+JOIN phones_to_orders AS pto ON pto."phoneId" = p.id
+WHERE p.model > 
+GROUP BY p.id, p.model
+ORDER BY p.id;
+
+-- 1. Кол-во заказов каждого пользователя и вся инфа о пользователе
+SELECT  u.*, count(orders.id) 
+FROM users AS u
+JOIN orders ON u.id = orders."userId"
+GROUP BY u.id;
+
+select count(orders.id)
+FROM orders;
