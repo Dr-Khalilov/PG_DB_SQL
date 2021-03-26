@@ -33,7 +33,7 @@ ORDER BY quantity ASC;
  ORDER BY "AMOUNT OF BRAND PHONES" ASC
  LIMIT 2;
 
-SELECT *,extract('year' from age("birthday")) as age
+SELECT *,extract('year' from age("birthday")) AS age
 FROM "users"
 ORDER BY "age" ASC, "firstName" DESC;
 
@@ -66,13 +66,15 @@ HAVING count(*)>= 10
 ORDER BY "length";
 
 -- Извлечь все телефоны конкретного заказа
-SELECT  phones.id
+SELECT  phones.id, count(*)
 FROM  phones
 JOIN phones_to_orders ON phones_to_orders."orderId" = phones.id
 JOIN orders ON  orders.id = phones_to_orders."orderId" 
 WHERE orders.id = 2
-ORDER BY orders.id;
+GROUP BY phones.id;
 
 -- Кол-во заказов каждого пользователя и его имеил
-SELECT *
-FROM users
+SELECT orders.id, count(*)
+FROM orders
+JOIN users ON  users.id = orders.id
+GROUP BY orders.id;
