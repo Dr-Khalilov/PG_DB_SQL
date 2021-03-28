@@ -7,28 +7,38 @@
  
  <= - REFERENCES
  */
-CREATE TABLE "phones"(
-  id serial PRIMARY KEY,
-  brand varchar(64) NOT NULL,
-  model varchar(64) NOT NULL,
-  price decimal(10, 2) NOT NULL CHECK (price > 0),
-  quantity int NOT NULL CHECK (quantity > 0),
-  UNIQUE(brand, model)
-);
-/*  */
-CREATE TABLE "orders"(
-  id serial PRIMARY KEY,
-  "createdAt" timestamp NOT NULL DEFAULT current_timestamp,
-  "userId" REFERENCES "users"(id)
-);
-/*  */
-CREATE TABLE "users_to_orders"(
-  "orderId" int REFERENCES "orders"(id),
-  "userId" int REFERENCES "users"(id),
-  quantity int NOT NULL,
-  PRIMARY KEY ("orderId", "userId")
-)
+
 /*  Посчитать кол-во телефонов, которые были проданы  */
-SELECT sum(quantity)
-FROM phones_to_orders;
+SELECT sum(quantity* price)
+FROM phones;
 /*  */
+-- Кол-во телефонов которые есть на складе
+SELECT sum(quantity)
+FROM phones;
+-- Средняя цена всех телефонов
+SELECT avg(price) as "Средняя цена телефлнов" FROM phones;
+-- Средняя цена каждого бренда
+SELECT avg(price), brand FROM phones
+GROUP BY brand;
+-- Стоимость всех телефонов в диапазоне цены от 10К до 20К
+SELECT sum(price*quantity), brand, model FROM phones
+WHERE price BETWEEN 10000 AND 20000
+GROUP BY brand, model;
+-- Кол-во моделей каждого бренда
+SELECT count(model), brand FROM phones
+GROUP BY brand;
+-- Каких моделей телефонов осталось меньше всего
+SELECT sum(quantity), brand, model FROM phones
+GROUP BY brand, model
+ORDER BY brand, model;
+-- Кол-во заказов каждого пользователя, которые совершали заказы
+SELECT count(id), "userId" FROM orders
+GROUP BY "userId";
+
+SELECT * FROM users
+ORDER BY height;
+
+SELECT extract('year' from age(birthday)) AS "Age", concat("firstName", ' ', "lastName") AS "Full name" 
+FROM users
+GROUP BY "Age", "Full name"
+ORDER BY "Age" ASC, "Full name" ASC;
