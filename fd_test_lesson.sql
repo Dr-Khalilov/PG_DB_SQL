@@ -42,3 +42,14 @@ SELECT extract('year' from age(birthday)) AS "Age", concat("firstName", ' ', "la
 FROM users
 GROUP BY "Age", "Full name"
 ORDER BY "Age" ASC, "Full name" ASC;
+
+SELECT sum(quantity), brand FROM phones
+GROUP BY brand
+HAVING sum(quantity)>10000;
+
+SELECT * FROM users
+WHERE "firstName" LIKE 'M%n';
+
+SELECT * FROM users
+JOIN orders ON orders."userId" = users.id
+WHERE users.id = 1;
