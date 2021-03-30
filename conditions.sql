@@ -54,3 +54,4 @@ CREATE OR REPLACE VIEW "base_inf_about_users" AS(
         ) AS "Gender"
     FROM users
 );
+
